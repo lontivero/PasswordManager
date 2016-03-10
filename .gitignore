@@ -1,0 +1,15 @@
+# Ignore monodevelop generated files and directories
+*.userprefs
+*.pidb
+*.swp
+
+bin/
+obj/
+packages/
+
+# Ignore VS files
+*.user
+*.suo
+
+#ignore Resharper folders
+_ReSharper*/
