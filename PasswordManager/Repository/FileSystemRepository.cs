@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using PasswordManager.Crypto;
 using PasswordManager.Encoding;
+using PasswordManager.Repository;
 
 namespace PasswordManager
 {
@@ -13,10 +14,12 @@ namespace PasswordManager
 	{
 		private readonly Func<string> _passwordProvider;
 		private string _password;
+		private GitWrapper _git;
 
 		public FileSystemRepository(Func<string> passwordProvider)
 		{
 			_passwordProvider = passwordProvider;
+			_git = new GitWrapper(RootFolder);
 		}
 
 		private string Password
@@ -64,6 +67,9 @@ namespace PasswordManager
 
 			var encryptedKey = new EncryptedKey(Password);
 			File.WriteAllBytes(Path.Combine(KeyFolder, "repository.key"), encryptedKey.ToByteArray());
+
+			_git.Init();
+			_git.Add("First commit");
 		}
 
 		public void AddAccount(string accountName)
@@ -74,6 +80,7 @@ namespace PasswordManager
 			account.Length = 20;
 
 			File.WriteAllText(Path.Combine(RootFolder, SanityFileName(accountName)), account.ToString(Key));
+			_git.Add("adding " + accountName);
 		}
 
 		public IEnumerable<Account> GetAccountsBy(Func<Account, bool> predicate)
@@ -84,7 +91,7 @@ namespace PasswordManager
 				var content = File.ReadAllText(file);
 				var account = Account.Parse(content);
 
-				if(predicate(account) && signer.VerifySignature(Encoders.ASCII.Decode(account.ToString()), account.Signature))
+				if(predicate(account) && signer.VerifySignature(Encoders.ASCII.Decode(account.ToString()), account.Signature) )
 					yield return account;
 			}
 		}

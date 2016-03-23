@@ -13,12 +13,12 @@ namespace PasswordManager
 		public CmdOptions()
 		{
 			_optionSet = new OptionSet{
+				{ "init",      "Initializes the repository", _=> Initialize() },
 				{ "h|?|help",  "Shows this help and exit", v=>ShowHelp() },
 				{ "c",         "Copy to clipboard", v=> CopyToClipboard() },
 				{ "l|ls",      "Lists all the credentials in the repository", ListAccounts },
 				{ "a|add=",    "Adds a new {CREDENTIAL} to the repository", AddAccount },
 				{ "v|view=",   "Displays the {CREDENTIAL} details", ViewAccount },
-				{ "init",      "Initializes the repository", _=> Initialize() },
 			};
 		}
 

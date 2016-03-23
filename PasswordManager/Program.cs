@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using Mono.Options;
+using PasswordManager.Crypto;
 using PasswordManager.Encoding;
 
 namespace PasswordManager
@@ -124,8 +125,18 @@ namespace PasswordManager
 
 		private static string PromptPassword()
 		{
-			Console.Write("Password: ");
-			var password = ReadPassword();
+			string password;
+			PasswordScore strength;
+			do
+			{
+				Console.Write("Master Password: ");
+				password = ReadPassword();
+				strength = PasswordAdvisor.CheckStrength(password);
+				if(strength < PasswordScore.Medium)
+				{
+					Console.WriteLine("Too weak password, try again.");
+				}
+			} while (strength < PasswordScore.Medium);
 			return password;
 		}
 
