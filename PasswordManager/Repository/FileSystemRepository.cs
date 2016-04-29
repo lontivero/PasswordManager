@@ -14,7 +14,7 @@ namespace PasswordManager
 	{
 		private readonly Func<string> _passwordProvider;
 		private string _password;
-		private GitWrapper _git;
+		private readonly GitWrapper _git;
 
 		public FileSystemRepository(Func<string> passwordProvider)
 		{
@@ -56,7 +56,8 @@ namespace PasswordManager
 			get
 			{
 				var encryptedKeyBytes = File.ReadAllBytes(Path.Combine(KeyFolder, "repository.key"));
-				return new EncryptedKey(encryptedKeyBytes, Password);
+				var ek = new EncryptedKey(encryptedKeyBytes, Password);
+				return ek.UnencryptedKey;
 			}
 		}
 

@@ -24,7 +24,7 @@ namespace PasswordManager.Crypto
 			_password = password;
 		}
 
-		private static byte[] Derive(string password)
+		internal static byte[] Derive(string password)
 		{
 			using(var der = new Rfc2898DeriveBytes(password, GetSalt(password)))
 			{
@@ -113,5 +113,13 @@ namespace PasswordManager.Crypto
 		{
 			return Encrypt(base.ToByteArray(), Derive(_password));
 		}
+
+	    public Key UnencryptedKey
+	    {
+	        get
+	        {
+	            return new Key(base.ToByteArray());
+	        }
+	    }
 	}
 }

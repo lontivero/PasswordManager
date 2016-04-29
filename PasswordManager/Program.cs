@@ -123,6 +123,14 @@ namespace PasswordManager
 			_repo.Create();
 		}
 
+		private static void ChangePassword()
+		{
+			var key = _repo.Key;
+			var keyBytes = EncryptedKey.Decrypt(key.ToByteArray(), EncryptedKey.Derive("Galindez31"));
+			var ek = new EncryptedKey(keyBytes, "hola");
+			var ba = ek.ToByteArray();
+		}
+
 		private static string PromptPassword()
 		{
 			string password;
