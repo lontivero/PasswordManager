@@ -11,6 +11,7 @@ namespace PasswordManager.Repository
 		private readonly string _gitRepoUrl;
 		private string _gitUser;
 		private string _gitEmail;
+		private string _gitSsh;
 
 		public GitWrapper(string path)
 		{
@@ -19,7 +20,7 @@ namespace PasswordManager.Repository
 			_gitRepoUrl = ConfigurationManager.AppSettings["git-remote-url"];
 			_gitUser = ConfigurationManager.AppSettings["git-user-name"];
 			_gitEmail = ConfigurationManager.AppSettings["git-user-email"];
-
+			_gitSsh = ConfigurationManager.AppSettings["git-ssh"];
 		}
 
 		public void Init()
@@ -56,7 +57,7 @@ namespace PasswordManager.Repository
 		{
 			var startInfo = new ProcessStartInfo(_gitPath);
 			if (!startInfo.EnvironmentVariables.ContainsKey("GIT_SSH"))
-				startInfo.EnvironmentVariables.Add("GIT_SSH", "C:\\Program Files (x86)\\PuTTY\\plink.exe");
+				startInfo.EnvironmentVariables.Add("GIT_SSH", _gitSsh);
 			startInfo.Arguments = arguments.Substring(4);
 			startInfo.CreateNoWindow = true;
 			startInfo.UseShellExecute = false;
@@ -75,7 +76,7 @@ namespace PasswordManager.Repository
 						process.Refresh();
 						if (!process.Responding)
 						{
-
+							process.Kill();
 						}
 					}
 				}while(!process.WaitForExit(5*1000));

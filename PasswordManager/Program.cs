@@ -72,7 +72,6 @@ namespace PasswordManager
 			catch (OptionException e)
 			{
 				Console.Write("pwd: ");
-				Console.WriteLine(e.Message);
 				Console.WriteLine("Try `pwd --help' for more information.");
 			}
 		}
